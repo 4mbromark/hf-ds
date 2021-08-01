@@ -1,0 +1,17 @@
+{
+  "name": "hf-ds-module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf dist && tsc && npm run",
+    "prepublish": "npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "rimraf": "^3.0.2"
+  }
+}

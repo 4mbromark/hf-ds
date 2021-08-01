@@ -1,0 +1,12 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "entryFile": "app",
+  "compilerOptions": {
+    "webpack": false,
+    "assets": [
+      "**/script/*.sql"
+    ],
+    "watchAssets": true
+  }
+}
