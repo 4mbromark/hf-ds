@@ -1,11 +1,11 @@
-import { Body, Controller, Delete, Get, HttpStatus, Logger, Post, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpStatus, Logger, Param, Post, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { Url } from './url/url';
-import { LoggedUser } from './jwt/jwt-user';
 import { Public } from './jwt/jwt-public';
 import { UserControllerService } from '../hf-service/controller/user-controller.service';
 import { HighFiveUser } from 'hf-ds-module';
 import { Prefix } from "hf-logger-module";
+import { LoggedUser } from "./jwt/jwt-user";
 
 @Controller(Url.BASE + '/user')
 export class UserController {
@@ -46,6 +46,17 @@ export class UserController {
     @Get()
     public async get(@LoggedUser() u: HighFiveUser, @Res() res: Response) {
         const user = await this.userControllerService.getById(u.id);
+        if (user) {
+            res.status(HttpStatus.OK).send(user);
+        } else {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+        }
+        this.logger.log(Prefix.RESPONSE_SENT + user.id + ' - ' + user.username);
+    }
+
+    @Get('/:id')
+    public async getById(@Param('id') id: number, @Res() res: Response) {
+        const user = await this.userControllerService.getById(id);
         if (user) {
             res.status(HttpStatus.OK).send(user);
         } else {

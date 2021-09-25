@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, HttpStatus, Logger, Post, Res } from "@nestjs/common";
 import { Response } from 'express';
 import { Url } from './url/url';
-import { LoggedUser } from './jwt/jwt-user';
 import { Public } from './jwt/jwt-public';
 import { UserControllerService } from '../hf-service/controller/user-controller.service';
 import { HighFiveUser } from 'hf-ds-module';
 import { Prefix } from "hf-logger-module";
 import { PswdControllerService } from "../hf-service/controller/pswd-controller.service";
+import { LoggedUser } from "./jwt/jwt-user";
 
 @Controller(Url.BASE + '/pswd')
 export class PswdController {

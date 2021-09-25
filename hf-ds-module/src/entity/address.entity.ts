@@ -4,13 +4,9 @@ import { HighFiveUser } from '..';
 
 export class HighFiveAddress extends HighFiveBaseEntity {
 
-    @OneToOne(() => HighFiveUser, (HighFiveUser) => HighFiveUser.id)
-    @JoinColumn({
-        name: 'ID_USER'
-    })
     @Column({
         name: 'ID_USER',
-        type: 'number',
+        type: 'bigint',
         nullable: false
     })
     idUser: number;
