@@ -10,6 +10,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
+    "start:test": "SET NODE_ENV=test & nest start --watch",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -19,5 +20,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "dependencies": {
+    "hf-ds-module": "file:../hf-ds-module",
+    "hf-env-module": "file:../../hf-axdevtool/modules/nest/hf-env-module",
+    "hf-logger-module": "file:../../hf-axdevtool/modules/nest/hf-logger-module",
+    "hf-mail-module": "file:../../hf-axdevtool/modules/nest/hf-mail-module"
   }
 }

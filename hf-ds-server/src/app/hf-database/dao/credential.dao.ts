@@ -8,17 +8,16 @@ import { Repository } from "typeorm";
 export class CredentialDao extends HighFiveBaseDao<HighFiveCredential> {
 
     constructor(
-        @InjectRepository(HighFiveCredential) private credentialsRepository: Repository<HighFiveCredential>,
+        @InjectRepository(HighFiveCredential) private readonly credentialsRepository: Repository<HighFiveCredential>,
     ) {
         super(credentialsRepository);
     }
 
     public async getByIdUser(idUser: number): Promise<HighFiveCredential> {
-        const credential = await this.credentialsRepository.findOne({
-            where: [
-                { idUser: idUser }
-            ]
-        });
+        const credential = await this.credentialsRepository.createQueryBuilder('credential')
+        .where("credential.idUser = :idUser", { idUser: idUser })
+        .getOne();
+
         return credential;
     }
 }

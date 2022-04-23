@@ -5,10 +5,10 @@ import * as express from 'express';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 4000;
 
   const app = await NestFactory.create(AppModule);
-  // app.use(express.static('../outblue-fronter-next/dist/outblue-fronter-next'))
+  app.setGlobalPrefix('/hf-api');
   app.useGlobalPipes(new ValidationPipe({
     errorHttpStatusCode: HttpStatus.BAD_REQUEST
   }));

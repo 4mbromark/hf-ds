@@ -1,20 +1,17 @@
-import { TokenService } from "../token.service";
-import { UserService } from "../database/user.service";
-import { CredentialService } from '../database/credential.service';
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Logger } from '@nestjs/common';
-import { HighFiveCryptService } from 'hf-common-module';
 import { HighFiveCredential, HighFiveUser } from 'hf-ds-module';
+import { HighFiveCryptUtil } from "hf-common-module";
+import { CredentialService } from 'src/app/hf-database/service/credential.service';
+import { UserService } from 'src/app/hf-database/service/user.service';
 
 @Injectable()
 export class PswdControllerService {
     private readonly logger = new Logger(PswdControllerService.name);
 
     constructor(
-        private userService: UserService,
-        private credentialService: CredentialService,
-
-        private cryptService: HighFiveCryptService,
+        private readonly userService: UserService,
+        private readonly credentialService: CredentialService
     ) {}
 
     public async add(idUser: number, pswd: string): Promise<void> {
@@ -28,7 +25,7 @@ export class PswdControllerService {
                 throw new ConflictException('already processed');
             }
 
-            const hash = await this.cryptService.encrypt(pswd);
+            const hash = await HighFiveCryptUtil.encrypt(pswd);
             crpw = new HighFiveCredential();
             crpw.idUser = idUser;
             crpw.pswd = hash;
@@ -45,10 +42,10 @@ export class PswdControllerService {
         let crpw = await this.credentialService.getByIdUser(idUser);
 
         if (user && crpw) {
-            const check = await this.cryptService.check(oldPswd, crpw.pswd);
+            const check = await HighFiveCryptUtil.check(oldPswd, crpw.pswd);
 
             if (check) {
-                const hash = await this.cryptService.encrypt(newPswd);
+                const hash = await HighFiveCryptUtil.encrypt(newPswd);
                 crpw.pswd = hash;
                 return await this.credentialService.update(crpw);
             }

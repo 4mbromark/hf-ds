@@ -8,18 +8,16 @@ import { Repository } from "typeorm";
 export class UserDao extends HighFiveBaseDao<HighFiveUser> {
 
     constructor(
-        @InjectRepository(HighFiveUser) private usersRepository: Repository<HighFiveUser>,
+        @InjectRepository(HighFiveUser) private readonly usersRepository: Repository<HighFiveUser>,
     ) {
         super(usersRepository);
     }
 
     public async getByUid(uid: string): Promise<HighFiveUser> {
-        const user = await this.usersRepository.findOne({
-            where: [
-                { username: uid },
-                { emailAddress: uid }
-            ]
-        });
+        const user = await this.usersRepository.createQueryBuilder('user')
+        .where("user.username = :uid OR user.emailAddress = :uid", { uid: uid })
+        .getOne();
+
         return user;
     }
 }

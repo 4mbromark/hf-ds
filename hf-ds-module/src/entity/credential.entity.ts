@@ -1,5 +1,5 @@
 import { HighFiveBaseEntity } from "hf-database-module";
-import { Column, Entity, JoinColumn,  OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
 import { HighFiveUser } from "./user.entity";
 
 @Entity({

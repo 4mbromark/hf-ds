@@ -6,7 +6,7 @@ import { HighFiveUser } from 'hf-ds-module';
 export class TokenService {
 
     constructor(
-        private jwtService: JwtService
+        private readonly jwtService: JwtService
     ) {}
 
     public async getToken(user: HighFiveUser): Promise<string> {
@@ -27,10 +27,11 @@ export class TokenService {
         return new Promise(async (resolve, rejects) => {
             try {
                 masterUser = await this.jwtService.verify(token);
-            } catch (error) {
+            } catch(e) {
                 // TODO
             }
-            resolve(masterUser);
+
+            masterUser ? resolve(masterUser) : rejects();
         });
     }
 }

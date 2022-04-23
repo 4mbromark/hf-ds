@@ -1,16 +1,15 @@
+import { PermitDao } from './app/hf-database/dao/permit.dao';
+import { AppDao } from './app/hf-database/dao/app.dao';
+import { HighFivePermit } from './app/hf-database/entity/permit.entity';
+import { HighFiveApp } from './app/hf-database/entity/app.entity';
 import { PswdControllerService } from './app/hf-service/controller/pswd-controller.service';
-import { HighFiveCryptService } from 'hf-common-module';
 import { TokenService } from './app/hf-service/token.service';
-import { HighFiveCredential, HighFiveUser } from 'hf-ds-module';
 import { UserDao } from 'src/app/hf-database/dao/user.dao';
-import { CredentialService } from './app/hf-service/database/credential.service';
-import { UserService } from './app/hf-service/database/user.service';
 import { AuthenticationControllerService } from './app/hf-service/controller/auth-controller.service';
 import { UserControllerService } from './app/hf-service/controller/user-controller.service';
 import { AuthenticationController } from './app/hf-controller/auth.controller';
 import { UserController } from './app/hf-controller/user.controller';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -19,17 +18,21 @@ import { join } from 'path';
 import { JwtGuard } from './app/hf-controller/jwt/jwt-guard';
 import { JwtStrategy } from './app/hf-controller/jwt/jwt-strategy';
 import { CredentialDao } from './app/hf-database/dao/credential.dao';
-import { HighFiveLoggerModule } from 'hf-logger-module';
 import { PswdController } from './app/hf-controller/pswd.controller';
-
+import { AppService } from './app/hf-database/service/app.service';
+import { HighFiveCredential, HighFiveUser } from 'hf-ds-module';
+import { HighFiveLoggerModule } from 'hf-logger-module';
+import { HighFiveMailSenderModule } from 'hf-mail-module';
+import { HighFiveEnvironmentModule } from 'hf-env-module';
+import { CredentialService } from './app/hf-database/service/credential.service';
+import { PermitService } from './app/hf-database/service/permit.service';
+import { UserService } from './app/hf-database/service/user.service';
 @Module({
   imports: [
-    HighFiveLoggerModule,
+    // HighFiveLoggerModule,
+    HighFiveEnvironmentModule,
+    HighFiveMailSenderModule,
 
-    ConfigModule.forRoot({
-      envFilePath: '.env',
-      isGlobal: true
-    }),
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
@@ -46,7 +49,9 @@ import { PswdController } from './app/hf-controller/pswd.controller';
       synchronize: false,
       entities: [
         HighFiveUser,
-        HighFiveCredential
+        HighFiveCredential,
+        HighFiveApp,
+        HighFivePermit
       ],
       migrations: [
         join(__dirname + '/app/hf-database/migration/*.{ts,js}')
@@ -57,7 +62,9 @@ import { PswdController } from './app/hf-controller/pswd.controller';
     // npx typeorm migration:create -n CreateTableBluePreferences -d src/app/hf-database/migration
     TypeOrmModule.forFeature([
       HighFiveUser,
-      HighFiveCredential
+      HighFiveCredential,
+      HighFiveApp,
+      HighFivePermit
     ])
   ],
   controllers: [
@@ -73,13 +80,16 @@ import { PswdController } from './app/hf-controller/pswd.controller';
     AuthenticationControllerService,
 
     TokenService,
-    HighFiveCryptService,
 
     UserService,
     CredentialService,
+    AppService,
+    PermitService,
 
     UserDao,
     CredentialDao,
+    AppDao,
+    PermitDao,
 
     /** JSONWEBTOKEN */
     JwtStrategy,
